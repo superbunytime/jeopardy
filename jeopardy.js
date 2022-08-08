@@ -23,34 +23,39 @@
 //    },
 //    ...
 //  ]
-const Url = "https://jservice.io/api/category?id="
-const idSet = new Set()
-function getRand(){
-    while(idSet.size < 5){idSet.add(Math.floor((Math.random()*18418)+1))} 
+const Url = "https://jservice.io/api/category?id=";
+const idSet = new Set();
+function getRand(set) {
+  while (set.size < 5) {
+    set.add(Math.floor(Math.random() * 18418 + 1));
+  }
 }
-getRand()
-const idArr = Array.from(idSet)
-console.log(idArr)
+getRand(idSet);
+const idArr = Array.from(idSet);
+console.log(idArr);
 //console.log(`${Url}${idArr[0]}`)
 
-const $game = $("#game")
-async function jeopardyGet(){
-    let catRes = await axios.get(`http://jservice.io/api/categories`)
-    let clueRes = await axios.get(`http://jservice.io/api/clues`)
-    console.log(catRes.data[0])
-    console.log(clueRes.data[0])
-    for(let i = 0; i < 1; i++){
-        $game.append(catRes.data[i].title)
-        $game.append(clueRes.data)
-        //think we're getting somewhere now
+const $game = $("#game");
+async function jeopardyGet() {
+  let catRes = await axios.get(`http://jservice.io/api/categories`);
+  let clueRes = await axios.get(`http://jservice.io/api/clues`);
+  console.log(catRes.data[0]);
+  console.log(clueRes.data[0]);
+  for (let i = 0; i < 1; i++) {
+    $game.append(catRes.data[i].title); //title is scrunkled
+    $game.append(clueRes.data[i].answer);
+    $game.append(clueRes.data[i].question);
+    //think we're getting somewhere now
+    //string interpolation pls (unnecessaryysy because end product won't need)
+    //figure out why for loop not worky
+  }
+  //accessing the first item of categories
+  //now you just need to access a truly random one 5 times
 
-    }
-    //accessing the first item of categories
-    //now you just need to access a truly random one 5 times
-
-    //safe value for category seems to be between 1 and 18418; might need to test for null object values and reroll
+  //safe value for category seems to be between 1 and 18418; might need to test for null object values and reroll
 }
-    jeopardyGet()
+jeopardyGet();
+
 let categories = [];
 
 // const dumb = [1, 2, 3, 4, 5]
@@ -61,9 +66,7 @@ let categories = [];
  * Returns array of category ids
  */
 
-
-function getCategoryIds() {
-}
+function getCategoryIds() {}
 
 /** Return object with data about a category:
  *
@@ -77,8 +80,7 @@ function getCategoryIds() {
  *   ]
  */
 
-function getCategory(catId) {
-}
+function getCategory(catId) {}
 
 /** Fill the HTML table#jeopardy with the categories & cells for questions.
  *
@@ -88,8 +90,7 @@ function getCategory(catId) {
  *   (initally, just show a "?" where the question/answer would go.)
  */
 
-async function fillTable() {
-}
+async function fillTable() {}
 
 /** Handle clicking on a clue: show the question or answer.
  *
@@ -99,21 +100,17 @@ async function fillTable() {
  * - if currently "answer", ignore click
  * */
 
-function handleClick(evt) {
-}
+function handleClick(evt) {}
 
 /** Wipe the current Jeopardy board, show the loading spinner,
  * and update the button used to fetch data.
  */
 
-function showLoadingView() {
-
-}
+function showLoadingView() {}
 
 /** Remove the loading spinner and update the button used to fetch data. */
 
-function hideLoadingView() {
-}
+function hideLoadingView() {}
 
 /** Start game:
  *
@@ -122,8 +119,7 @@ function hideLoadingView() {
  * - create HTML table
  * */
 
-async function setupAndStart() {
-}
+async function setupAndStart() {}
 
 /** On click of start / restart button, set up game. */
 
