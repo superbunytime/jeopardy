@@ -37,17 +37,19 @@ console.log(idArr);
 
 const $game = $("#game");
 async function jeopardyGet() {
-  let catRes = await axios.get(`http://jservice.io/api/categories`);
+  let catRes = await axios.get(`https://jservice.io/api/category?id=`);
   let clueRes = await axios.get(`http://jservice.io/api/clues`);
-  console.log(catRes.data[0]);
+  console.log(catRes.data[idArr[0]]);//returning undefined
+  console.log(idArr[0])
   console.log(clueRes.data[0]);
   for (let i = 0; i < 1; i++) {
-    $game.append(catRes.data[i].title); //title is scrunkled
+    // $game.append(catRes.data[i].title); //title is scrunkled
+    $game.append(`${catRes}${idArr[i]}`)
     $game.append(clueRes.data[i].answer);
     $game.append(clueRes.data[i].question);
     //think we're getting somewhere now
-    //string interpolation pls (unnecessaryysy because end product won't need)
     //figure out why for loop not worky
+    //not getting dynamic random results
   }
   //accessing the first item of categories
   //now you just need to access a truly random one 5 times
