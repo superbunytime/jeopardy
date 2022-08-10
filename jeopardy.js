@@ -31,7 +31,7 @@ function getRand() {
   }
   return Array.from(set);
 }
-const idArr = getRand();
+const   dArr = getRand();
 console.log(idArr);
 const $game = $("#game");
 async function jeopardyGet() {
