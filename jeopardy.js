@@ -1,7 +1,3 @@
-//I think I see, conceptually, how to do this; you have to have one level of nested random sampling; what i mean to say is, you have to randomly sample the categories, ensuring there are no duplicates, and then for each category, randomly sample the question pools, ensuring there are no duplicates in that either.  Afte that it's a simple matter of capturing the number of clicks per div, which really you only click each div twice, and after that everything is without meaning.
-
-//there's also the restart game function which is really just calling all the setup functions again after clearing everything.
-
 //so access the API, get the randomized categories, get the randomized questions per each category, link them to the appropriate div id, and set the event handlers.
 
 // categories is the main data structure for the app; it looks like this:
@@ -31,19 +27,27 @@ function getRand() {
   }
   return Array.from(set);
 }
-const   dArr = getRand();
+const   idArr = getRand();
 console.log(idArr);
 const $game = $("#game");
 async function jeopardyGet() {
-  let { data } = await axios.get(
-    `https://jservice.io/api/category?id=${idArr[0]}`
-  );
-  console.log(data);
-  for (let i = 0; i < data.clues.length; i++) {
-    $game.append(`${data.clues[i].value}`);
+  for(let i = 0; i < 5; i ++){
+    let { data } = await axios.get(
+      `https://jservice.io/api/category?id=${idArr[i]}`
+    );
+    console.log(data.title);
+    for (let i = 0; i < 5; i++) {
+      $game.append(`${data.clues[i].value}`);
+
+  }
+
 
     // $game.append(`${data.clues[i].question}`);
     // $game.append(`${data.clues[i].answer}`);
+    //data.clues.length doesn't work for the limiter because it has null values
+    //and sometimes it has like 20 clues
+    //so we're just gonna revert to 5, and get the first 5, and see if that doesn't work for us.
+    //to deal with null values in the data, do a null check in the data.title and data.clues[i].value
   }
   //accessing the first item of categories
   //now you just need to access a truly random one 5 times
@@ -53,14 +57,6 @@ async function jeopardyGet() {
 jeopardyGet();
 
 let categories = [];
-
-// const dumb = [1, 2, 3, 4, 5]
-// const dumbSet = new Set(dumb, [1, 2, 3])
-// console.log(dumb.length == dumbSet.size) //this should work for equality comparison purposes
-/** Get NUM_CATEGORIES random category from API.
- *
- * Returns array of category ids
- */
 
 function getCategoryIds() {}
 
