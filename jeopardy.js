@@ -1,24 +1,3 @@
-//so access the API, get the randomized categories, get the randomized questions per each category, link them to the appropriate div id, and set the event handlers.
-
-// categories is the main data structure for the app; it looks like this:
-
-//  [
-//    { title: "Math",
-//      clues: [
-//        {question: "2+2", answer: 4, showing: null},
-//        {question: "1+1", answer: 2, showing: null}
-//        ...
-//      ],
-//    },
-//    { title: "Literature",
-//      clues: [
-//        {question: "Hamlet Author", answer: "Shakespeare", showing: null},
-//        {question: "Bell Jar Author", answer: "Plath", showing: null},
-//        ...
-//      ],
-//    },
-//    ...
-//  ]
 const Url = "https://jservice.io/api/category?id=";
 function getRand() {
   const set = new Set();
@@ -26,28 +5,38 @@ function getRand() {
     set.add(Math.floor(Math.random() * 18418 + 1));
   }
   return Array.from(set);
+  //if you decide to deal with null data in categories, it will have to be done in here
+  //which means redeclaring variables, which honestly isn't that big of a deal
+  //but if it's not in the design spec as a necessity, it can probably be skipped
+  //for the sake of desperately trying to catch up
+  //i understand that in a real world situation, the null would need to be dealt with
+  //but in the bootcamp, simply acknowledging it is... maybe good enough? i can refactor later i guess.
 }
-const   idArr = getRand();
+const idArr = getRand();
 console.log(idArr);
 const $game = $("#game");
+//API is having some problems.  Going to save, push to github, and switch gears.
 async function jeopardyGet() {
-  for(let i = 0; i < 5; i ++){
+  //this was literally just designed as a test function and outputs a big pile of data
+  //maybe use the actual functions baked into the assignment now that you've got an MVP of this
+  for (let i = 0; i < 6; i++) {
     let { data } = await axios.get(
       `https://jservice.io/api/category?id=${idArr[i]}`
     );
-    console.log(data.title);
+    $game.append(`${data.title} `);
     for (let i = 0; i < 5; i++) {
-      $game.append(`${data.clues[i].value}`);
-
-  }
-
-
-    // $game.append(`${data.clues[i].question}`);
-    // $game.append(`${data.clues[i].answer}`);
+      $game.append(
+        `${data.clues[i].value} ${data.clues[i].question} ${data.clues[i].answer} `
+      );
+    }
     //data.clues.length doesn't work for the limiter because it has null values
     //and sometimes it has like 20 clues
     //so we're just gonna revert to 5, and get the first 5, and see if that doesn't work for us.
     //to deal with null values in the data, do a null check in the data.title and data.clues[i].value
+    //let x = null
+    //x === (true) ? true : false;
+    //if x in data.title || if x in data.clues[i].value
+    //FIND A NEW GOD
   }
   //accessing the first item of categories
   //now you just need to access a truly random one 5 times
