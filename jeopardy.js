@@ -1,18 +1,18 @@
 const URL = "https://jservice.io/api/category?id=";
 const NUM_CATGEGORIES = 6;
 const NUM_CLUES = 6;
-const idArr = getRand();
+// const idArr = getRand();
 const $game = $("#game");
 let categories = [];
 let catObj = {};
 
-function getRand() {
-  const set = new Set();
-  while (set.size < 6) {
-    set.add(Math.floor(Math.random() * 18418 + 1)); //number of categories
-  }
-  return Array.from(set);
-} //works
+// function getRand() {
+//   const set = new Set();
+//   while (set.size < 6) {
+//     set.add(Math.floor(Math.random() * 18418 + 1)); //number of categories
+//   }
+//   return Array.from(set);
+// } //works
 
 async function jeopardyGet() {
   //this was literally just designed as a test function and outputs a big pile of data
@@ -32,11 +32,16 @@ async function jeopardyGet() {
 } //works
 // jeopardyGet();
 
-async function getCategoryIds() {
-  
-} 
-getCategoryIds();
+async function getCategoryIds(){
+  const res = await axios.get("https://jservice.io/api/categories?count=100");
+  const { title, id } = res.data;
+  let catIds = _.sampleSize(res.data, 6).map((val) => {
+    return { title: val.title, id: val.id };
+  });
 
+  return catIds;
+};
+console.log(getCategoryIds())
 /** Return object with data about a category:
  *
  *  Returns { title: "Math", clues: clue-array }
@@ -49,7 +54,7 @@ getCategoryIds();
  *   ]
  */
 
-function getCategory() {}
+function getCategory(catId) {}
 
 /** Fill the HTML table#jeopardy with the categories & cells for questions.
  *
@@ -58,15 +63,6 @@ function getCategory() {}
  *   each with a question for each category in a <td>
  *   (initally, just show a "?" where the question/answer would go.)
  */
-for (let i = 0; i < 6; i++) {
-  let { data } = await axios.get(`${URL}${idArr[i]}`);
-  categories.push(data.title);
-  catObj.title = data.title;
-  catObj.question = data.clues[i].question;
-  catObj.answer = data.clues[i].answer;
-}//almost works; need to loop through all the questions and answers.
-console.log(categories);
-console.log(catObj);
 
 async function fillTable() {
   let $table = $("<table>");
