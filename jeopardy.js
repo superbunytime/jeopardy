@@ -1,30 +1,26 @@
-const Url = "https://jservice.io/api/category?id=";
+const URL = "https://jservice.io/api/category?id=";
+const NUM_CATGEGORIES = 6;
+const NUM_CLUES = 6;
+const idArr = getRand();
+const $game = $("#game");
+let categories = [];
+let catObj = {};
+
 function getRand() {
   const set = new Set();
   while (set.size < 6) {
     set.add(Math.floor(Math.random() * 18418 + 1)); //number of categories
   }
   return Array.from(set);
-  //if you decide to deal with null data in categories, it will have to be done in here
-  //which means redeclaring variables, which honestly isn't that big of a deal
-  //but if it's not in the design spec as a necessity, it can probably be skipped
-  //for the sake of desperately trying to catch up
-  //i understand that in a real world situation, the null would need to be dealt with
-  //but in the bootcamp, simply acknowledging it is... maybe good enough? i can refactor later i guess.
-}
-const idArr = getRand();
-const $game = $("#game");
+} //works
 
 async function jeopardyGet() {
   //this was literally just designed as a test function and outputs a big pile of data
   //maybe use the actual functions baked into the assignment now that you've got an MVP of this
   for (let i = 0; i < 6; i++) {
-    let { data } = await axios.get(`${Url}${idArr[i]}`);
+    let { data } = await axios.get(`${URL}${idArr[i]}`);
     console.log(data.title);
     console.log(data.clues[i].question);
-    if (data.clues[i].question !== true) {
-      console.log("we've encountered a null value");
-    }
     $game.append(`${data.title} `);
     for (let i = 0; i < 5; i++) {
       $game.append(`${data.clues[i].question} ${data.clues[i].answer} `);
@@ -32,26 +28,14 @@ async function jeopardyGet() {
     //data.clues.length doesn't work for the limiter because it has null values
     //and sometimes it has like 20 clues
     //so we're just gonna revert to 5, and get the first 5, and see if that doesn't work for us.
-    //to deal with null values in the data, do a null check in the data.title and data.clues[i].value
-    //let x = null
-    //x === (true) ? true : false;
-    //if x in data.title || if x in data.clues[i].value
-    //FIND A NEW GOD (reroll the random number and repeat the null check)
   }
-}
+} //works
 // jeopardyGet();
 
-let categories = [];
-
 async function getCategoryIds() {
-  for (let i = 0; i < 6; i++) {
-    let { data } = await axios.get(`${Url}${idArr[i]}`);
-    categories.push(data.title);
-  }
-  console.log(categories);
-  return categories;
-}
-getCategoryIds().then(fillTable());
+  
+} 
+getCategoryIds();
 
 /** Return object with data about a category:
  *
@@ -65,7 +49,7 @@ getCategoryIds().then(fillTable());
  *   ]
  */
 
-function getCategory(catId) {}
+function getCategory() {}
 
 /** Fill the HTML table#jeopardy with the categories & cells for questions.
  *
@@ -74,6 +58,15 @@ function getCategory(catId) {}
  *   each with a question for each category in a <td>
  *   (initally, just show a "?" where the question/answer would go.)
  */
+for (let i = 0; i < 6; i++) {
+  let { data } = await axios.get(`${URL}${idArr[i]}`);
+  categories.push(data.title);
+  catObj.title = data.title;
+  catObj.question = data.clues[i].question;
+  catObj.answer = data.clues[i].answer;
+}//almost works; need to loop through all the questions and answers.
+console.log(categories);
+console.log(catObj);
 
 async function fillTable() {
   let $table = $("<table>");
@@ -88,15 +81,11 @@ async function fillTable() {
   }
   $table.append($tbody);
 
-    for (let i = 0; i < 6; i++) {
-        $tbody.append($tr);
-        $tr.append(`<td> HELP. ME. </td>`);
-
-    }
-
-  
+  for (let i = 0; i < 6; i++) {
+    $tbody.append($tr);
+    $tr.append(`<td> HELP. ME. </td>`);
   }
-
+}
 
 /** Handle clicking on a clue: show the question or answer.
  *
