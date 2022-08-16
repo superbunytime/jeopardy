@@ -46,10 +46,10 @@ let categories = [];
 async function getCategoryIds() {
   for (let i = 0; i < 6; i++) {
     let { data } = await axios.get(`${Url}${idArr[i]}`);
-    console.log(data.title);
     categories.push(data.title);
   }
   console.log(categories);
+  return categories;
 }
 getCategoryIds().then(fillTable());
 
@@ -76,24 +76,25 @@ function getCategory(catId) {}
  */
 
 async function fillTable() {
-// Add row with headers for categories
-$("#game thead").empty();
-let $tr = $("<tr>");
-for (let i = 0; i < 6; i++) {
-  $tr.append($("<th>").text("help me please"));
-}
-$("#game thead").append($tr);
-
-// Add rows with questions for each category
-$("#game tbody").empty();
-for (let i = 0; i < 5; i++) {
+  let $table = $("<table>");
+  let $thead = $("<thead>");
+  let $tbody = $("<tbody>");
   let $tr = $("<tr>");
-  for (let j = 0; j < 6; j++) {
-    $tr.append($("<td>").attr("id", `${i}-${j}`).text("?"));
-  }
-  $("#game tbody").append($tr);
-}
+  $game.append($table);
+  $table.append($thead);
 
+  for (let i = 0; i < 6; i++) {
+    $thead.append(`<th id = th${i}>${categories[i]}</th>`);
+  }
+  $table.append($tbody);
+
+    for (let i = 0; i < 6; i++) {
+        $tbody.append($tr);
+        $tr.append(`<td> HELP. ME. </td>`);
+
+    }
+
+  
   }
 
 
