@@ -1,8 +1,8 @@
 const Url = "https://jservice.io/api/category?id=";
 function getRand() {
   const set = new Set();
-  while (set.size < 5) {
-    set.add(Math.floor(Math.random() * 18418 + 1));
+  while (set.size < 6) {
+    set.add(Math.floor(Math.random() * 18418 + 1));//number of categories
   }
   return Array.from(set);
   //if you decide to deal with null data in categories, it will have to be done in here
@@ -13,20 +13,24 @@ function getRand() {
   //but in the bootcamp, simply acknowledging it is... maybe good enough? i can refactor later i guess.
 }
 const idArr = getRand();
-console.log(idArr);
 const $game = $("#game");
-//API is having some problems.  Going to save, push to github, and switch gears.
+
 async function jeopardyGet() {
   //this was literally just designed as a test function and outputs a big pile of data
   //maybe use the actual functions baked into the assignment now that you've got an MVP of this
   for (let i = 0; i < 6; i++) {
     let { data } = await axios.get(
-      `https://jservice.io/api/category?id=${idArr[i]}`
+      `${Url}${idArr[i]}`
     );
+    console.log(data.title)
+    console.log(data.clues[i].question)
+    if(data.clues[i].question !== true){
+      console.log("we've encountered a null value")
+    }
     $game.append(`${data.title} `);
     for (let i = 0; i < 5; i++) {
       $game.append(
-        `${data.clues[i].value} ${data.clues[i].question} ${data.clues[i].answer} `
+        `${data.clues[i].question} ${data.clues[i].answer} `
       );
     }
     //data.clues.length doesn't work for the limiter because it has null values
@@ -36,18 +40,25 @@ async function jeopardyGet() {
     //let x = null
     //x === (true) ? true : false;
     //if x in data.title || if x in data.clues[i].value
-    //FIND A NEW GOD
+    //FIND A NEW GOD (reroll the random number and repeat the null check)
   }
-  //accessing the first item of categories
-  //now you just need to access a truly random one 5 times
 
-  //safe value for category seems to be between 1 and 18418; might need to test for null object values and reroll
 }
-jeopardyGet();
+// jeopardyGet();
 
 let categories = [];
 
-function getCategoryIds() {}
+async function getCategoryIds() {
+  for (let i = 0; i < 6; i++) {
+    let { data } = await axios.get(
+      `${Url}${idArr[i]}`
+    );
+    console.log(data.title)
+    categories.push(data.title)
+  }  
+  console.log(categories)
+}
+getCategoryIds()
 
 /** Return object with data about a category:
  *
@@ -61,7 +72,12 @@ function getCategoryIds() {}
  *   ]
  */
 
-function getCategory(catId) {}
+function getCategory(catId) {
+  
+
+
+  }
+  
 
 /** Fill the HTML table#jeopardy with the categories & cells for questions.
  *
@@ -71,7 +87,17 @@ function getCategory(catId) {}
  *   (initally, just show a "?" where the question/answer would go.)
  */
 
-async function fillTable() {}
+async function fillTable() {
+  let $table = $("<table>")
+  let $th = $("<th>")
+  let $tr = $("<tr>");
+  for (let i = 0; i < 6; i++) {
+    $tr.append($("<th>").text(categories[i]));
+  }
+  $("#game thead").append($tr);
+
+}
+fillTable()
 
 /** Handle clicking on a clue: show the question or answer.
  *
@@ -81,11 +107,13 @@ async function fillTable() {}
  * - if currently "answer", ignore click
  * */
 
-function handleClick(evt) {}
+function handleClick(evt) {
+}
 
 /** Wipe the current Jeopardy board, show the loading spinner,
  * and update the button used to fetch data.
  */
+
 
 function showLoadingView() {}
 

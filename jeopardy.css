@@ -5,3 +5,16 @@
   #8d2ab5
   #74119c
 */
+
+#game {
+  text-align: center;
+  font-size: 13pt;
+  background-color: #060ce9;
+  color: white;
+  border-collapse: collapse;
+}
+
+#game th, #game td{
+  background-color: #060ce9;
+  border: solid 1px white;
+}
