@@ -9,12 +9,12 @@
 #game {
   text-align: center;
   font-size: 13pt;
-  background-color: #060ce9;
+  /* background-color: #060ce9; */
   color: white;
   border-collapse: collapse;
 }
 
-#game th, #game td{
+#game th, #game td, #game tr{
   background-color: #060ce9;
-  border: solid 1px white;
+  border: solid 5px white;
 }

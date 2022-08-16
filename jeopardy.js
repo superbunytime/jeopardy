@@ -2,7 +2,7 @@ const Url = "https://jservice.io/api/category?id=";
 function getRand() {
   const set = new Set();
   while (set.size < 6) {
-    set.add(Math.floor(Math.random() * 18418 + 1));//number of categories
+    set.add(Math.floor(Math.random() * 18418 + 1)); //number of categories
   }
   return Array.from(set);
   //if you decide to deal with null data in categories, it will have to be done in here
@@ -19,19 +19,15 @@ async function jeopardyGet() {
   //this was literally just designed as a test function and outputs a big pile of data
   //maybe use the actual functions baked into the assignment now that you've got an MVP of this
   for (let i = 0; i < 6; i++) {
-    let { data } = await axios.get(
-      `${Url}${idArr[i]}`
-    );
-    console.log(data.title)
-    console.log(data.clues[i].question)
-    if(data.clues[i].question !== true){
-      console.log("we've encountered a null value")
+    let { data } = await axios.get(`${Url}${idArr[i]}`);
+    console.log(data.title);
+    console.log(data.clues[i].question);
+    if (data.clues[i].question !== true) {
+      console.log("we've encountered a null value");
     }
     $game.append(`${data.title} `);
     for (let i = 0; i < 5; i++) {
-      $game.append(
-        `${data.clues[i].question} ${data.clues[i].answer} `
-      );
+      $game.append(`${data.clues[i].question} ${data.clues[i].answer} `);
     }
     //data.clues.length doesn't work for the limiter because it has null values
     //and sometimes it has like 20 clues
@@ -42,7 +38,6 @@ async function jeopardyGet() {
     //if x in data.title || if x in data.clues[i].value
     //FIND A NEW GOD (reroll the random number and repeat the null check)
   }
-
 }
 // jeopardyGet();
 
@@ -50,15 +45,13 @@ let categories = [];
 
 async function getCategoryIds() {
   for (let i = 0; i < 6; i++) {
-    let { data } = await axios.get(
-      `${Url}${idArr[i]}`
-    );
-    console.log(data.title)
-    categories.push(data.title)
-  }  
-  console.log(categories)
+    let { data } = await axios.get(`${Url}${idArr[i]}`);
+    console.log(data.title);
+    categories.push(data.title);
+  }
+  console.log(categories);
 }
-getCategoryIds()
+getCategoryIds().then(fillTable());
 
 /** Return object with data about a category:
  *
@@ -72,12 +65,7 @@ getCategoryIds()
  *   ]
  */
 
-function getCategory(catId) {
-  
-
-
-  }
-  
+function getCategory(catId) {}
 
 /** Fill the HTML table#jeopardy with the categories & cells for questions.
  *
@@ -88,16 +76,27 @@ function getCategory(catId) {
  */
 
 async function fillTable() {
-  let $table = $("<table>")
-  let $th = $("<th>")
+  let $table = $("<table>");
+  let $thead = $("<thead>");
+  let $tbody = $("<tbody>");
   let $tr = $("<tr>");
-  for (let i = 0; i < 6; i++) {
-    $tr.append($("<th>").text(categories[i]));
-  }
-  $("#game thead").append($tr);
+  $game.append($table);
+  $table.append($thead);
 
+  for (let i = 0; i < 6; i++) {
+    $tbody.append(`<th id = th${i}>${categories[i]}</th>`);
+  }
+  $thead.append($tbody);
+  for (let i = 0; i < 5; i++);
+  {
+    for (let i = 0; i < 6; i++) {
+      $tbody.append($tr);
+      $tr.append(`<td> HELP. ME. </td>`);
+    }
+  }
+
+  console.log($game);
 }
-fillTable()
 
 /** Handle clicking on a clue: show the question or answer.
  *
@@ -108,12 +107,12 @@ fillTable()
  * */
 
 function handleClick(evt) {
+  $game.empty();
 }
 
 /** Wipe the current Jeopardy board, show the loading spinner,
  * and update the button used to fetch data.
  */
-
 
 function showLoadingView() {}
 
