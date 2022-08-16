@@ -16,5 +16,6 @@
 
 #game th, #game td, #game tr{
   background-color: #060ce9;
-  border: solid 5px white;
+  border: solid 2px white;
+  padding: 5px;
 }

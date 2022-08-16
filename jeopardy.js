@@ -76,27 +76,26 @@ function getCategory(catId) {}
  */
 
 async function fillTable() {
-  let $table = $("<table>");
-  let $thead = $("<thead>");
-  let $tbody = $("<tbody>");
-  let $tr = $("<tr>");
-  $game.append($table);
-  $table.append($thead);
-
-  for (let i = 0; i < 6; i++) {
-    $tbody.append(`<th id = th${i}>${categories[i]}</th>`);
-  }
-  $thead.append($tbody);
-  for (let i = 0; i < 5; i++);
-  {
-    for (let i = 0; i < 6; i++) {
-      $tbody.append($tr);
-      $tr.append(`<td> HELP. ME. </td>`);
-    }
-  }
-
-  console.log($game);
+// Add row with headers for categories
+$("#game thead").empty();
+let $tr = $("<tr>");
+for (let i = 0; i < 6; i++) {
+  $tr.append($("<th>").text("help me please"));
 }
+$("#game thead").append($tr);
+
+// Add rows with questions for each category
+$("#game tbody").empty();
+for (let i = 0; i < 5; i++) {
+  let $tr = $("<tr>");
+  for (let j = 0; j < 6; j++) {
+    $tr.append($("<td>").attr("id", `${i}-${j}`).text("?"));
+  }
+  $("#game tbody").append($tr);
+}
+
+  }
+
 
 /** Handle clicking on a clue: show the question or answer.
  *
