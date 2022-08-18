@@ -3,7 +3,6 @@ const NUM_CATGEGORIES = 6;
 const NUM_CLUES = 6;
 const $game = $("#game");
 let categories = [];
-let catObj = {};
 
 async function jeopardyGet() {
   //this was literally just designed as a test function and outputs a big pile of data
@@ -29,7 +28,8 @@ async function getCategoryIds(){
 
   return catIds;
 };
-console.log(getCategoryIds())
+let item = getCategoryIds()
+console.log(item)
 /** Return object with data about a category:
  *
  *  Returns { title: "Math", clues: clue-array }
@@ -42,7 +42,7 @@ console.log(getCategoryIds())
  *   ]
  */
 
-function getCategory(catId) {}
+async function getCategory(catId) {}
 
 /** Fill the HTML table#jeopardy with the categories & cells for questions.
  *
@@ -101,7 +101,7 @@ fillTable()
  * */
 
 function handleClick(evt) {
-  $game.empty();
+  let clickCount = 0;
 }
 
 /** Wipe the current Jeopardy board, show the loading spinner,
@@ -121,7 +121,11 @@ function hideLoadingView() {}
  * - create HTML table
  * */
 
-async function setupAndStart() {}
+async function setupAndStart() {
+  $game.empty();
+  getCategoryIds()
+
+}
 
 /** On click of start / restart button, set up game. */
 
