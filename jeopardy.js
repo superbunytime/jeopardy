@@ -1,14 +1,16 @@
-const URL = "https://jservice.io/api/category?id=";
+const URL_START = "https://jservice.io/api/";
+const URL_CAT = "categories?count=100"
 const NUM_CATGEGORIES = 6;
 const NUM_CLUES = 6;
 const $game = $("#game");
 let categories = [];
+let catObj = {};
 
 async function jeopardyGet() {
   //this was literally just designed as a test function and outputs a big pile of data
   //maybe use the actual functions included in the assignment now that you've got an MVP of this
   for (let i = 0; i < 6; i++) {
-    let { data } = await axios.get(`${URL}${idArr[i]}`);//idArr was removed in favor of using lodash to randomly generate category id; no longer works
+    let { data } = await axios.get(`${URL_START}category?id=${idArr[i]}`);//idArr was removed in favor of using lodash to randomly generate category id; no longer works
     console.log(data.title);
     console.log(data.clues[i].question);
     $game.append(`${data.title} `);
@@ -16,20 +18,20 @@ async function jeopardyGet() {
       $game.append(`${data.clues[i].question} ${data.clues[i].answer} `);
     }
   }
-} //works
+} //doesn't work anymore lmao help me i am dying
 // jeopardyGet();
 
 async function getCategoryIds(){
-  const res = await axios.get("https://jservice.io/api/categories?count=100");
+  const res = await axios.get(`${URL_START}${URL_CAT}`);
   const { title, id } = res.data;
   let catIds = _.sampleSize(res.data, 6).map((val) => {
     return { title: val.title, id: val.id };
   });
-
+console.log(catIds)
   return catIds;
 };
-let item = getCategoryIds()
-console.log(item)
+// let item = getCategoryIds()
+// console.log(item)
 /** Return object with data about a category:
  *
  *  Returns { title: "Math", clues: clue-array }
@@ -53,20 +55,18 @@ async function getCategory(catId) {}
  */
 
 async function fillTable() {
+  let catIds = await getCategoryIds()
   let $table = $("<table>");
   let $thead = $("<thead>");
   let $tbody = $("<tbody>");
   let $tr0 = $("<tr id = '0'>");
-  let $tr1 = $("<tr id = '1'>");
-  let $tr2 = $("<tr id = '2'>");
-  let $tr3 = $("<tr id = '3'>");
-  let $tr4 = $("<tr id = '4'>");
+
 
   $game.append($table);
   $table.append($thead);
 
   for (let i = 0; i < 6; i++) {
-    $thead.append(`<th id = th${i}>${categories[i]}</th>`);
+    $thead.append(`<th id = th${i}>${catIds[i].title}</th>`);
   }
   $table.append($tbody);
 
@@ -74,23 +74,8 @@ async function fillTable() {
     $tbody.append($tr0);
     $tr0.append(`<td>?</td>`);
   }
-  for (let i = 0; i < 6; i++) {
-    $tbody.append($tr1);
-    $tr1.append(`<td>?</td>`);
-  }
-  for (let i = 0; i < 6; i++) {
-    $tbody.append($tr2);
-    $tr2.append(`<td>?</td>`);
-  }
-  for (let i = 0; i < 6; i++) {
-    $tbody.append($tr3);
-    $tr3.append(`<td>?</td>`);
-  }
-  for (let i = 0; i < 6; i++) {
-    $tbody.append($tr4);
-    $tr4.append(`<td>?</td>`);
-  }
-}//this isn't dynamic programming and i hate how it looks but trying to us tr[i] and a nested for loop is not giving the results i want.  however, i think i need to be able to dynamically assign ids in order to put the questions/answers on there.
+
+}
 fillTable()
 /** Handle clicking on a clue: show the question or answer.
  *
