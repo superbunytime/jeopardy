@@ -1,16 +1,15 @@
 const URL_START = "https://jservice.io/api/";
-const URL_CAT = "categories?count=100"
-const NUM_CATGEGORIES = 6;
-const NUM_CLUES = 6;
+const URL_CAT = "categories?count=100";
+const URL_CLUES = "category?id="
 const $game = $("#game");
 let categories = [];
-let catObj = {};
 
 async function jeopardyGet() {
   //this was literally just designed as a test function and outputs a big pile of data
   //maybe use the actual functions included in the assignment now that you've got an MVP of this
+  let item = getCategoryIds()
   for (let i = 0; i < 6; i++) {
-    let { data } = await axios.get(`${URL_START}category?id=${idArr[i]}`);//idArr was removed in favor of using lodash to randomly generate category id; no longer works
+    let { data } = await axios.get(`${URL_START}category?id=${item[i]}`); //idArr was removed in favor of using lodash to randomly generate category id; no longer works
     console.log(data.title);
     console.log(data.clues[i].question);
     $game.append(`${data.title} `);
@@ -19,19 +18,18 @@ async function jeopardyGet() {
     }
   }
 } //doesn't work anymore lmao help me i am dying
-// jeopardyGet();
+// console.log(jeopardyGet())
 
-async function getCategoryIds(){
+async function getCategoryIds() {
   const res = await axios.get(`${URL_START}${URL_CAT}`);
   const { title, id } = res.data;
   let catIds = _.sampleSize(res.data, 6).map((val) => {
     return { title: val.title, id: val.id };
   });
-console.log(catIds)
+  console.log(catIds);
   return catIds;
-};
-// let item = getCategoryIds()
-// console.log(item)
+}
+
 /** Return object with data about a category:
  *
  *  Returns { title: "Math", clues: clue-array }
@@ -55,12 +53,11 @@ async function getCategory(catId) {}
  */
 
 async function fillTable() {
-  let catIds = await getCategoryIds()
+  let catIds = await getCategoryIds();
   let $table = $("<table>");
   let $thead = $("<thead>");
   let $tbody = $("<tbody>");
-  let $tr0 = $("<tr id = '0'>");
-
+  let $tr = $("<tr>");
 
   $game.append($table);
   $table.append($thead);
@@ -70,13 +67,17 @@ async function fillTable() {
   }
   $table.append($tbody);
 
-  for (let i = 0; i < 6; i++) {
-    $tbody.append($tr0);
-    $tr0.append(`<td>?</td>`);
+  $("#game tbody").empty();
+  for (let i = 0; i < 5; i++) {
+    let $tr = $("<tr>");
+    for (let j = 0; j < 6; j++) {
+      $tr.append($("<td>").attr("id", `${i}-${j}`).text("?"));
+    }
+    $("#game tbody").append($tr);
   }
-
+  
 }
-fillTable()
+fillTable();
 /** Handle clicking on a clue: show the question or answer.
  *
  * Uses .showing property on clue to determine what to show:
@@ -87,6 +88,8 @@ fillTable()
 
 function handleClick(evt) {
   let clickCount = 0;
+  let $tr = $("<tr>");
+
 }
 
 /** Wipe the current Jeopardy board, show the loading spinner,
@@ -108,8 +111,6 @@ function hideLoadingView() {}
 
 async function setupAndStart() {
   $game.empty();
-  getCategoryIds()
-
 }
 
 /** On click of start / restart button, set up game. */
