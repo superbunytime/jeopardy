@@ -10,3 +10,8 @@
   border: solid 2px white;
   padding: 5px;
 }
+
+#game td{
+  height: 150px;
+  width: 200px;
+}

@@ -18,7 +18,6 @@ async function jeopardyGet() {
     }
   }
 } //doesn't work anymore lmao help me i am dying
-// console.log(jeopardyGet())
 
 async function getCategoryIds() {
   const res = await axios.get(`${URL_START}${URL_CAT}`);
@@ -54,10 +53,7 @@ async function getCategory(catId) {
     clueArr.push(clueObj)
   }
   return clueArr
-  // console.log(clues.data.clues[0].question)
-  // console.log(clues.data.clues[0].answer)
 }
-// getCategory(1)
 
 /** Fill the HTML table#jeopardy with the categories & cells for questions.
  *
