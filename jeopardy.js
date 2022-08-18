@@ -26,7 +26,6 @@ async function getCategoryIds() {
   let catIds = _.sampleSize(res.data, 6).map((val) => {
     return { title: val.title, id: val.id };
   });
-  console.log(catIds);
   return catIds;
 }
 
@@ -42,7 +41,23 @@ async function getCategoryIds() {
  *   ]
  */
 
-async function getCategory(catId) {}
+async function getCategory(catId) {
+  const clues = await axios.get(`${URL_START}${URL_CLUES}${catId}`);
+  let clueArr = []
+  for (let i = 0; i < 5; i++) {
+    // console.table(clues.data.clues[i]);
+    let clueObj = {
+      question: clues.data.clues[i].question,
+      answer: clues.data.clues[i].answer,
+      showing: null
+    }
+    clueArr.push(clueObj)
+  }
+  return clueArr
+  // console.log(clues.data.clues[0].question)
+  // console.log(clues.data.clues[0].answer)
+}
+// getCategory(1)
 
 /** Fill the HTML table#jeopardy with the categories & cells for questions.
  *
@@ -52,8 +67,8 @@ async function getCategory(catId) {}
  *   (initally, just show a "?" where the question/answer would go.)
  */
 
-async function fillTable() {
-  let catIds = await getCategoryIds();
+async function fillTable(clueArr, catArr) {
+  // let catIds = await getCategoryIds();
   let $table = $("<table>");
   let $thead = $("<thead>");
   let $tbody = $("<tbody>");
@@ -63,7 +78,7 @@ async function fillTable() {
   $table.append($thead);
 
   for (let i = 0; i < 6; i++) {
-    $thead.append(`<th id = th${i}>${catIds[i].title}</th>`);
+    $thead.append(`<th id = th${i}>${catArr[i].title}</th>`);
   }
   $table.append($tbody);
 
@@ -71,12 +86,18 @@ async function fillTable() {
   for (let i = 0; i < 5; i++) {
     let $tr = $("<tr>");
     for (let j = 0; j < 6; j++) {
-      $tr.append($("<td>").attr("id", `${i}-${j}`).text("?"));
+      const clue = clueArr[j][i];
+
+      const $td = $("<td>")
+        .text("?")
+        .click((evt) => handleClick(evt, clue));
+
+      $tr.append($td);
     }
     $("#game tbody").append($tr);
   }
 }
-fillTable();
+
 /** Handle clicking on a clue: show the question or answer.
  *
  * Uses .showing property on clue to determine what to show:
@@ -85,26 +106,32 @@ fillTable();
  * - if currently "answer", ignore click
  * */
 
-function handleClick(evt) {
-  let id = evt.target.id;
-  let clickCount = 0;
-  let $td = $("td");
-  $td.click(() => {
-    console.log("anything really");
-    clickCount++;
-    console.log(clickCount);
-  });
+function handleClick(evt, clue) {
+  const $td = $(evt.target);
+
+  if (clue.showing == null) {
+    clue.showing = "question";
+    $td.text(clue.question)
+  } else if (clue.showing == "question") {
+    clue.showing = "answer";
+    $td.text(clue.answer);
+  }
+
 }
 
 /** Wipe the current Jeopardy board, show the loading spinner,
  * and update the button used to fetch data.
  */
 
-function showLoadingView() {}
+function showLoadingView() {
+  $("#restart").attr("disabled", true);
+}
 
 /** Remove the loading spinner and update the button used to fetch data. */
 
-function hideLoadingView() {}
+function hideLoadingView() {
+  $("#restart").attr("disabled", false);
+}
 
 /** Start game:
  *
@@ -115,12 +142,32 @@ function hideLoadingView() {}
 
 async function setupAndStart() {
   $game.empty();
+
+  let clueArr = []
+  let catArr = await getCategoryIds()
+  for(let i = 0; i < catArr.length; i++){
+    let catId = catArr[i].id
+    let clues = await getCategory(catId)
+    clueArr.push(clues)
+  }
+  
+  fillTable(clueArr, catArr);
+
 }
 
 /** On click of start / restart button, set up game. */
 
-// TODO
+$("#restart").click(async (evt) => {
+  showLoadingView();
+
+  try {
+    await setupAndStart();
+  } catch (e) {
+    alert("An error occurred, please try again.");
+  }
+
+  hideLoadingView();
+});
 
 /** On page load, add event handler for clicking clues */
 
-// TODO
