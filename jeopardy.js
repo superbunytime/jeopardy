@@ -1,13 +1,13 @@
 const URL_START = "https://jservice.io/api/";
 const URL_CAT = "categories?count=100";
-const URL_CLUES = "category?id="
+const URL_CLUES = "category?id=";
 const $game = $("#game");
 let categories = [];
 
 async function jeopardyGet() {
   //this was literally just designed as a test function and outputs a big pile of data
   //maybe use the actual functions included in the assignment now that you've got an MVP of this
-  let item = getCategoryIds()
+  let item = getCategoryIds();
   for (let i = 0; i < 6; i++) {
     let { data } = await axios.get(`${URL_START}category?id=${item[i]}`); //idArr was removed in favor of using lodash to randomly generate category id; no longer works
     console.log(data.title);
@@ -75,7 +75,6 @@ async function fillTable() {
     }
     $("#game tbody").append($tr);
   }
-  
 }
 fillTable();
 /** Handle clicking on a clue: show the question or answer.
@@ -87,9 +86,14 @@ fillTable();
  * */
 
 function handleClick(evt) {
+  let id = evt.target.id;
   let clickCount = 0;
-  let $tr = $("<tr>");
-
+  let $td = $("td");
+  $td.click(() => {
+    console.log("anything really");
+    clickCount++;
+    console.log(clickCount);
+  });
 }
 
 /** Wipe the current Jeopardy board, show the loading spinner,
