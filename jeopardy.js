@@ -4,21 +4,6 @@ const URL_CLUES = "category?id=";
 const $game = $("#game");
 let categories = [];
 
-async function jeopardyGet() {
-  //this was literally just designed as a test function and outputs a big pile of data
-  //maybe use the actual functions included in the assignment now that you've got an MVP of this
-  let item = getCategoryIds();
-  for (let i = 0; i < 6; i++) {
-    let { data } = await axios.get(`${URL_START}category?id=${item[i]}`); //idArr was removed in favor of using lodash to randomly generate category id; no longer works
-    console.log(data.title);
-    console.log(data.clues[i].question);
-    $game.append(`${data.title} `);
-    for (let i = 0; i < 5; i++) {
-      $game.append(`${data.clues[i].question} ${data.clues[i].answer} `);
-    }
-  }
-} //doesn't work anymore lmao help me i am dying
-
 async function getCategoryIds() {
   const res = await axios.get(`${URL_START}${URL_CAT}`);
   const { title, id } = res.data;
@@ -44,7 +29,6 @@ async function getCategory(catId) {
   const clues = await axios.get(`${URL_START}${URL_CLUES}${catId}`);
   let clueArr = []
   for (let i = 0; i < 5; i++) {
-    // console.table(clues.data.clues[i]);
     let clueObj = {
       question: clues.data.clues[i].question,
       answer: clues.data.clues[i].answer,
@@ -64,7 +48,6 @@ async function getCategory(catId) {
  */
 
 async function fillTable(clueArr, catArr) {
-  // let catIds = await getCategoryIds();
   let $table = $("<table>");
   let $thead = $("<thead>");
   let $tbody = $("<tbody>");
@@ -161,9 +144,7 @@ $("#restart").click(async (evt) => {
   } catch (e) {
     alert("An error occurred, please try again.");
   }
-
   hideLoadingView();
 });
 
 /** On page load, add event handler for clicking clues */
-
